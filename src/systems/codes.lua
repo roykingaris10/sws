@@ -41,3 +41,41 @@ game.ReplicatedStorage.RedeemCode.OnServerInvoke = function(player, code)
     
     return false  -- either code is invalid or already used
 end
+
+-- Client side
+local RedeemFrame = script.Parent.RedeemFrame
+local CodeBox = RedeemFrame.CodeBox
+local RedeemButton = RedeemFrame.RedeemButton
+local ToggleButton = script.Parent.ToggleButton
+local player = game.Players.LocalPlayer
+local character = player.Character
+
+local RedeemBack = script.Parent.RedeemBack
+
+local sound = Instance.new("Sound", character)
+sound.SoundId = "rbxassetid://7369989129"
+sound.Volume = 1
+
+
+ToggleButton.MouseButton1Click:Connect(function()
+	sound:Play()
+	RedeemFrame.Visible = not RedeemFrame.Visible
+	RedeemBack.Visible = not RedeemBack.Visible
+end)
+
+RedeemButton.MouseButton1Click:Connect(function()
+	local Code = CodeBox.Text
+	local Redeemed = game.ReplicatedStorage.RedeemCode:InvokeServer(Code)
+	
+	if Redeemed == true then
+		CodeBox.Text = ""
+		CodeBox.PlaceholderText = "Redeemed Code!"
+		wait(1)
+		CodeBox.PlaceholderText = "Twitter Code Here"
+	else
+		CodeBox.Text = ""
+		CodeBox.PlaceholderText = "Invalid Code"
+		wait(1)
+		CodeBox.PlaceholderText = "Twitter Code Here"
+	end
+end)
